@@ -2,6 +2,8 @@
 
 Versão Python, Django e PostgreSQL da [rinha de backend 2ª edição - 2024/Q1](https://github.com/zanfranceschi/rinha-de-backend-2024-q1)
 
+É uma pequena adaptação da [versão do django](https://github.com/rafaelpadovezi/rinha-2-django). Aqui é usado o django ORM enquanto a outra versão usa queries raw usando diretamente o psycopg3.
+
 ## Stack
 
 - Python
@@ -19,8 +21,8 @@ docker compose up api1 api2 nginx
 
 ![Métricas do gatling](docs/gatling.png)
 
-
 ## Outras versões da rinha
 
 - [aspnet com EF Core e PostgreSQL](https://github.com/rafaelpadovezi/rinha-2)
 - [aspnet com MongoDB](https://github.com/rafaelpadovezi/rinha-2-mongo)
+- [python, django, gunicorn e psycopg3](https://github.com/rafaelpadovezi/rinha-2-django)

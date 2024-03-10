@@ -93,7 +93,7 @@ DATABASES = {
     }
 }
 
-DATABASES["default"]["CONN_MAX_AGE"] = 0
+DATABASES["default"]["CONN_MAX_AGE"] = None
 DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = os.environ.get(
     "DISABLE_SERVER_SIDE_CURSORS", False
 )
@@ -143,7 +143,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 USE_STATIC_FILE_HANDLER_FROM_WSGI = os.getenv(
     "USE_STATIC_FILE_HANDLER_FROM_WSGI", False
 )
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", "host=localhost dbname=rinha user=postgres password=postgres"
-)
-DB_POOL_MAX_SIZE = int(os.getenv("DB_POOL_MAX_SIZE", "15"))

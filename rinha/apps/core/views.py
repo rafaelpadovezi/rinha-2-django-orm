@@ -4,14 +4,13 @@ from rest_framework.decorators import api_view
 from rinha.apps.core.models import Cliente
 from rinha.apps.core.models import Transacao
 from django.db import transaction
-from django.db.models import F
 
 
 @api_view(["GET"])
 def get_extrato(request: Request, id: int) -> Response:
     try:
         with transaction.atomic():
-            cliente = Cliente.objects.values("limite", "saldo").get(pk=id)
+            cliente = Cliente.objects.values("limite", "saldo").get(id__exact=id)
             transacoes = (
                 Transacao.objects.order_by("-id")
                 .filter(cliente__id=id)
@@ -58,27 +57,8 @@ def create_transacao(request: Request, id: int) -> Response:
         transacao["valor"] if transacao["tipo"] == "c" else transacao["valor"] * -1
     )
 
-    # with transaction.atomic(savepoint=False):
-    # affected = Cliente.objects.filter(pk=id) \
-    #     .filter(saldo__gt=F("limite") * -1 - valor_transacao) \
-    #     .update(saldo=F("saldo") + valor_transacao)
-
-    # cliente = Cliente.objects.filter(pk=id).values("limite", "saldo").first()
-    # if cliente is None:
-    #     return Response({"message": "Cliente não encontrado"}, status=404)
-    # if affected == 0:
-    #     return Response({"message": "Saldo insuficiente"}, status=422)
-
-    # Transacao.objects.create(
-    #     cliente_id=id,
-    #     valor=transacao["valor"],
-    #     tipo=transacao["tipo"],
-    #     descricao=transacao["descricao"],
-    # )
-    # return Response({"saldo": cliente["saldo"], "limite": cliente["limite"]})
-
-    with transaction.atomic(savepoint=False):
-        cliente = Cliente.objects.select_for_update().filter(pk=id).first()
+    with transaction.atomic():
+        cliente = Cliente.objects.select_for_update().filter(id__exact=id).first()
         if cliente is None:
             return Response({"message": "Cliente não encontrado"}, status=404)
         if cliente.saldo + valor_transacao < cliente.limite * -1:
